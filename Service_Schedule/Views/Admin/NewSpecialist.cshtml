@@ -1,35 +1,29 @@
-﻿@model Service_Schedule.Models.AccountViewModel
+﻿@model Service_Schedule.Models.RegistrationSpecView
 @{
-    ViewData["Title"] = "Account";
+    ViewData["Title"] = "NewSpecialist";
 }
 <div class="mt-5 mb-5">
-    <h1 class="text-center">Личный Кабинет</h1>
+    <h1 class="text-center">Новый специалист</h1>
 </div>
 <div class="my-3 p-5 bg-white rounded box-shadow">
-    <form method="post" asp-controller="Account" asp-action="Account">
-        @Html.Hidden("Id", @Model.Id)
-        @{
-            if (ViewBag.SuccessChangePassword != null && ViewBag.SuccessChangePassword)
-            {
-                <span class="text-success">Пароль успешно изменен</span>
-            }
-            if (ViewBag.SuccessChangeData != null && ViewBag.SuccessChangeData)
-            {
-                <span class="text-success">Данные успешно изменены</span>
-            }
-        }
+    <form method="post" asp-controller="Admin" asp-action="NewSpecialist" enctype="multipart/form-data">
         <div class="text-danger" asp-validation-summary="ModelOnly"></div>
         <div class="form-row">
-            <div class="form-group col-md-6">
-                <label asp-for="Email"></label>
-                <span asp-validation-for="Email" class="text-danger"></span>
-                <input type="email" class="form-control" placeholder="Email" asp-for="Email">
-            </div>
             <div class="form-group col-md-6">
                 <label asp-for="Name">Имя</label>
                 <span asp-validation-for="Name" class="text-danger"></span>
                 <input asp-for="Name" class="form-control" placeholder="Имя">
             </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Surname">Фамилия</label>
+                <span asp-validation-for="Surname" class="text-danger"></span>
+                <input asp-for="Surname" class="form-control" placeholder="Фамилия">
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Patronymic">Отчество</label>
+            <span asp-validation-for="Patronymic" class="text-danger"></span>
+            <input asp-for="Patronymic" class="form-control" placeholder="Отчество">
         </div>
         <div class="form-row">
             <div class="form-group col-md-5">
@@ -52,10 +46,36 @@
             </div>
         </div>
         <div class="form-group">
+            <label asp-for="Email"></label>
+            <span asp-validation-for="Email" class="text-danger"></span>
+            <input type="email" class="form-control" placeholder="Email" asp-for="Email">
+        </div>
+        <div class="form-group">
+            <label asp-for="TypeSpec">Тип специальности</label>
+            <span asp-validation-for="TypeSpec" class="text-danger"></span>
+            <input asp-for="TypeSpec" class="form-control" placeholder="Тип специальности">
+        </div>
+        <div class="form-group">
+            <label asp-for="Discription">Описание</label>
+            <span asp-validation-for="Discription" class="text-danger"></span>
+            <textarea class="form-control" asp-for="Discription" placeholder="Описание"> </textarea>
+        </div>
+        <div class="form-group">
+            <label asp-for="Avatar">Фото</label>
+            <span asp-validation-for="Avatar" class="text-danger"></span>
+            <input class="form-control-file" type="file" asp-for="Avatar" placeholder="140Х140" />
+        </div>
+        <div class="form-group">
             <label asp-for="Password"></label>
             <span asp-validation-for="Password" class="text-danger"></span>
             <input type="password" class="form-control" id="password-input1" asp-for="Password">
         </div>
+        <div class="form-group">
+            <label asp-for="PasswordConfirm"></label>
+            <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+            <input type="password" class="form-control" id="password-input2" asp-for="PasswordConfirm">
+        </div>
+
         <div class="form-group">
             <div class="form-check">
                 <input class="form-check-input" onchange="return show_hide_password(this);" type="checkbox" id="gridCheck">
@@ -64,12 +84,8 @@
                 </label>
             </div>
         </div>
-        <div class="form-row">
-            <button type="submit" class="btn btn-primary ml-auto col-3">Сохранить</button>
-        </div>
-    </form>
-    <form method="post" asp-action="Logout" asp-controller="Account">
-        <button type="submit" class="btn btn-primary"><i class="mr-1 bi bi-box-arrow-left"></i>Выйти</button>
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
 </div>
 <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.1.min.js"></script>
@@ -85,7 +101,14 @@
             target.classList.remove('view');
             input.setAttribute('type', 'password');
         }
-
+        input = document.getElementById('password-input2');
+         if (input.getAttribute('type') == 'password') {
+            target.classList.add('view');
+            input.setAttribute('type', 'text');
+        } else {
+            target.classList.remove('view');
+            input.setAttribute('type', 'password');
+        }
         return false;
     }
 </script>

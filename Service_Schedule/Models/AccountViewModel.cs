@@ -5,6 +5,9 @@ namespace Service_Schedule.Models
 {
     public class AccountViewModel
     {
+        [Required(ErrorMessage = "*Id Отсутствует")]
+        public string Id { get; set; }
+
         [EmailAddress(ErrorMessage = "Неверный формат почты")]
         [Display(Name = "Почта")]
         [Required(ErrorMessage = "*Не указана почта")]
@@ -30,5 +33,15 @@ namespace Service_Schedule.Models
         [DataType(DataType.Password)]
         [Display(Name = "Сменить пароль")]
         public string Password { get; set; }
+
+        public bool IsChange(User user)
+        {
+            return !(user.BirthDate.Equals(BirthDate) &&
+                user.PhoneNumber.Equals(Phone?.Trim()) &&
+                user.UserName.Equals(Email?.Trim()) &&
+                user.Email.Equals(Email?.Trim()) &&
+                user.Gender.Equals(Gender) &&
+                user.Name.Equals(Name?.Trim()));
+        }
     }
 }

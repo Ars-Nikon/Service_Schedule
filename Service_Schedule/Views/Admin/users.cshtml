@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Users";
+    ViewData["container"] = "container-fluid my-5";
+}
+@model List<User>
+<div class="mt-5 mb-5">
+    <h1 class="text-center">Пользователи</h1>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="container p-5 bg-white rounded box-shadow" id="div_0">
+                @await Component.InvokeAsync("UserInfoSegment",@Model?.FirstOrDefault())
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div id="div_1">
+                @await Component.InvokeAsync("UsersListSegment",@Model)
+            </div>
+            <button class="btn btn-info" type="button" id="UpdateUsers">Обновить</button>
+        </div>
+    </div>
+</div>
+<script src="~/js/Users.js" />

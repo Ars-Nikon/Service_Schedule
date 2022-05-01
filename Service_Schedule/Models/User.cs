@@ -8,5 +8,8 @@ namespace Service_Schedule.Models
         public bool? Gender { get; set; }
         public string Name { get; set; }
         public DateTime? BirthDate { get; set; }
+
+        public DateTime? DateCreate { get; set; }
+
     }
 }

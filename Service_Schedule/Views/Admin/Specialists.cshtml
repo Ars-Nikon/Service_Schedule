@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Specialists";
+    ViewData["container"] = "container-fluid my-5";
+}
+@model List<SpecialistView>
+<div class="mt-5 mb-5">
+    <h1 class="text-center">Специалисты</h1>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="container p-5 bg-white rounded box-shadow" id="div_0">
+                @await Component.InvokeAsync("SpecInfoSegment",@Model.FirstOrDefault())
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div id="div_1">
+                @await Component.InvokeAsync("SpecListSegment",@Model)
+            </div>
+            <button class="btn btn-info" type="button" id="Update">Обновить</button>
+        </div>
+    </div>
+</div>
+<script src="~/js/Spec.js" />

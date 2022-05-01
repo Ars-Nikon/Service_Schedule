@@ -1,0 +1,98 @@
+﻿@model Service_Schedule.Models.SpecialistView
+@if (Model != null)
+{
+    @if (Model?.Avatar_byte != null)
+    {
+        <img style='width:140px; height:140px;' class="rounded mx-auto d-block" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Avatar_byte))" />
+    }
+    <form id="SpecEdit" enctype="multipart/form-data">
+        <input type="hidden" asp-for="AccountViewModel.Id" value="@Model.AccountViewModel.Id" />
+        <div id="FormInfo"></div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label asp-for="AccountViewModel.Name">Имя</label>
+                <input asp-for="AccountViewModel.Name" class="form-control" placeholder="Имя">
+            </div>
+            <div class="form-group col-md-6">
+                <label asp-for="Surname">Фамилия</label>
+                <input asp-for="Surname" class="form-control" placeholder="Фамилия">
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Patronymic">Отчество</label>
+            <input asp-for="Patronymic" class="form-control" placeholder="Отчество">
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-5">
+                <label asp-for="AccountViewModel.Phone"></label>
+                <input class="form-control" asp-for="AccountViewModel.Phone" placeholder="Номер Телефон">
+            </div>
+            <div class="form-group col-md-4">
+                <label asp-for="AccountViewModel.Gender"></label>
+                <select asp-for="AccountViewModel.Gender" class="form-control">
+                    <option value="true" selected>Мужской</option>
+                    <option value="false">Женский</option>
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label asp-for="AccountViewModel.BirthDate"></label>
+                <input type="date" class="form-control" asp-for="AccountViewModel.BirthDate">
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="AccountViewModel.Email"></label>
+            <input type="email" class="form-control" placeholder="Email" asp-for="AccountViewModel.Email">
+        </div>
+        <div class="form-group">
+            <label asp-for="TypeSpec">Тип специальности</label>
+            <input asp-for="TypeSpec" class="form-control" placeholder="Тип специальности">
+        </div>
+        <div class="form-group">
+            <label asp-for="Discription">Описание</label>
+            <textarea class="form-control" asp-for="Discription" placeholder="Описание"> </textarea>
+        </div>
+        <div class="form-group">
+            <label asp-for="AccountViewModel.Password"></label>
+            <input type="password" class="form-control" id="password-input1" asp-for="AccountViewModel.Password">
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                @{
+                    if (@Model.Accepts)
+                    {
+                        <input type="checkbox" class="form-check-input" asp-for="Accepts" checked>
+                    }
+                    else
+                    {
+                        <input type="checkbox" class="form-check-input" asp-for="Accepts">
+                    }
+                }
+                <label asp-for="Accepts">Показывать в расписании</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input class="form-check-input" onchange="return show_hide_password(this);" type="checkbox" id="gridCheck">
+                <label class="form-check-label" for="gridCheck">
+                    Показать пароль
+                </label>
+            </div>
+        </div>
+    </form>
+    <form asp-action="ChangePhoto" method='post' enctype="multipart/form-data">
+        <input type="hidden" id="Id" name="Id" value="@Model.AccountViewModel.Id" />
+        <div class="form-row">
+            <div class="form-group">
+                <label asp-for="Avatar">Изменить Фото</label>
+                <span asp-validation-for="Avatar" class="text-danger"></span>
+                <input class="form-control-file" type="file" asp-for="Avatar" placeholder="140Х140" />
+            </div>
+            <div class="form-group">
+                <button type='submit' class='btn btn-info'>Изменить</button>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <button onclick='send_form()' class="btn btn-primary ml-auto col-3">Сохранить</button>
+    </div>
+}

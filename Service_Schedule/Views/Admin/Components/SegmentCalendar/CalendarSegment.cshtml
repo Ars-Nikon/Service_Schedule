@@ -1,0 +1,50 @@
+﻿@model List<DayInfoForCalendar>
+@{
+    if (Model != null && Model.Count != 0)
+    {
+        var rows = Model.Count / 7;
+
+        <table class="table">
+            <thead>
+                <tr class="border bg-dark text-white">
+                    <th scope="col">ПН</th>
+                    <th scope="col">ВТ</th>
+                    <th scope="col">СР</th>
+                    <th scope="col">ЧТ</th>
+                    <th scope="col">ПТ</th>
+                    <th scope="col">СБ</th>
+                    <th scope="col">ВС</th>
+                </tr>
+            </thead>
+            <tbody class="bg-light">
+                @{
+                    for (int i = 0; i < rows; i++)
+                    {
+                        <tr>
+
+                            @foreach (var day in Model.Skip(i * 7).Take(7))
+                            {
+                                if (day.Type == 1)
+                                {
+                                    <th class="border bg-success" id="@day.Id">@day.Day</th>
+                                }
+                                else
+                                {
+                                    if (day.Day == 0)
+                                    {
+                                        <th class="border"> </th>
+                                    }
+                                    else
+                                    {
+                                        <th class="border">@day.Day</th>
+                                    }
+                                }
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+    }
+}

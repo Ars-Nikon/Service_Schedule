@@ -19,13 +19,13 @@ namespace Service_Schedule.Utilits
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var result = new HtmlContentViewComponentResult(
-                new HtmlString($"<h1 class=\"display - 4\">Привет!!!</h1>"));
+                new HtmlString($"<h1 class=\"display-4\">Привет!!!</h1>"));
 
             if (HttpContext.Request.Cookies.ContainsKey("name"))
             {
                 string name = HttpContext.Request.Cookies["name"];
                 return new HtmlContentViewComponentResult(
-               new HtmlString($"<h1 class=\"display - 4\">Привет, {name}!!!</h1>")
+               new HtmlString($"<h1 class=\"display-4\">Привет, {name}!!!</h1>")
            );
             }
 

@@ -1,0 +1,26 @@
+﻿@model List<SpecialistView>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Имя</th>
+            <th scope="col">Фамилия</th>
+            <th scope="col">Почта</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int i = 1;
+            foreach (var user in @Model)
+            {
+                <tr id="@user.AccountViewModel.Id" class="user">
+                    <th scope="row">@(i++)</th>
+                    <td>@user.AccountViewModel.Name</td>
+                    <td>@user.Surname</td>
+                    <td>@user.AccountViewModel.Email</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

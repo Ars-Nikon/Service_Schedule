@@ -4,6 +4,7 @@ using Service_Schedule.Models;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace Service_Schedule.Controllers
 {
@@ -35,7 +36,7 @@ namespace Service_Schedule.Controllers
                 if (result.Succeeded)
                 {
                     var user = await _userManager.FindByNameAsync(model.Email);
-                    HttpContext.Response.Cookies.Append("name", user?.Name??"NoName");
+                    HttpContext.Response.Cookies.Append("name", user?.Name ?? "NoName");
                     // проверяем, принадлежит ли URL приложению
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                     {
@@ -82,12 +83,14 @@ namespace Service_Schedule.Controllers
                     BirthDate = model.BirthDate,
                     Name = model.Name?.Trim(),
                     PhoneNumber = model.Phone?.Trim(),
-                    Gender = model.Gender
+                    Gender = model.Gender,
+                    DateCreate = DateTime.UtcNow.AddHours(3)
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "user");
                     await _signInManager.SignInAsync(user, false);
                     HttpContext.Response.Cookies.Append("name", user.Name);
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
@@ -117,27 +120,11 @@ namespace Service_Schedule.Controllers
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
             if (user == null)
             {
+                await _signInManager.SignOutAsync();
                 return RedirectToAction("Index", "Home");
             }
-            var usermodel = new AccountViewModel
-            {
-                BirthDate = user.BirthDate,
-                Email = user.Email?.Trim(),
-                Name = user.Name?.Trim(),
-                Gender = user.Gender,
-                Phone = user.PhoneNumber?.Trim()
-            };
+            var usermodel = Utilits.Utilit.ConvertUserByAccountUser(user);
             return View(usermodel);
-        }
-
-        private bool IsChange(User user, AccountViewModel viewModel)
-        {
-            return !(user.BirthDate.Equals(viewModel.BirthDate) &&
-                user.PhoneNumber.Equals(viewModel.Phone?.Trim()) &&
-                user.UserName.Equals(viewModel.Email?.Trim()) &&
-                user.Email.Equals(viewModel.Email?.Trim()) &&
-                user.Gender.Equals(viewModel.Gender) &&
-                user.Name.Equals(viewModel.Name?.Trim()));
         }
 
         [Authorize]
@@ -175,7 +162,7 @@ namespace Service_Schedule.Controllers
                         }
                     }
                 }
-                if (IsChange(user, model))
+                if (model.IsChange(user))
                 {
                     user.Email = model.Email?.Trim();
                     user.UserName = model.Email?.Trim();

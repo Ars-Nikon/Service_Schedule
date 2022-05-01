@@ -27,8 +27,8 @@ namespace Service_Schedule
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<IdentityContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ApplicationContext>(options =>
+               options.UseSqlServer(Configuration.GetConnectionString("AppConnection")));
 
             services.AddIdentity<User, IdentityRole>(opts =>
             {
@@ -40,7 +40,7 @@ namespace Service_Schedule
                 opts.Password.RequireDigit = false; // требуются ли цифры
             })
                 .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
-                .AddEntityFrameworkStores<IdentityContext>();
+                .AddEntityFrameworkStores<ApplicationContext>();
 
             services.AddControllersWithViews();
         }

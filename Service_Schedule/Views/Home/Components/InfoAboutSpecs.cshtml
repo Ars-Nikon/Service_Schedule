@@ -1,0 +1,29 @@
+﻿@model List<Specialist>
+@{
+    int counrRows = 0;
+
+    if (@Model?.Count != 0)
+    {
+        counrRows = @Model.Count / 3;
+        if (Model.Count % 3 != 0)
+        {
+            counrRows++;
+        }
+        for (int i = 0; i < counrRows; i++)
+        {
+            <div class="row py-5">
+                @foreach (var spec in Model.Skip(i*3).Take(3))
+                {
+                    <div class="col-lg-4">
+                        <img style='width:140px; height:140px;' class="rounded mx-auto d-block text-center" src="data:image/jpeg;base64,@(Convert.ToBase64String(spec.Avatar))" />
+                        <h2>@spec.User.Name</h2>
+                        <p>Специальность: @spec.TypeSpec</p>
+                        <p>@spec.Discription</p>
+                        <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+                    </div>
+                }
+            </div>
+        }
+    }
+
+}
