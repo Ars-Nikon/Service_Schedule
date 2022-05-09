@@ -1,0 +1,77 @@
+﻿@using Service_Schedule.Utilits
+@using System.ComponentModel.DataAnnotations
+@{
+    ViewData["Title"] = "TimeTableRecord";
+    int indexActiv = 1;
+}
+@model List<TimeTableForSpec>
+<div class="mt-5 mb-5">
+    <h1 class="text-center">Мои записи</h1>
+</div>
+@if (Model == null || Model.Count == 0)
+{
+    <h1>Записей нет</h1>
+}
+else
+{
+    <h2 class="text-left">Активные записи</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Дата</th>
+                <th scope="col">Клиент</th>
+                <th scope="col">Начало</th>
+                <th scope="col">Конец</th>
+                <th scope="col">Стутус</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var activ in Model.Where(x => x.Status == TimeTableTimeVisit.Visit_Status.Taken))
+            {
+
+                <tr>
+                    <th scope="row">@(indexActiv++)</th>
+                    <td>@activ.Date.ToString(@"dd.MM.yyyy")</td>
+                    @if (string.IsNullOrEmpty(activ.Id_User))
+                    {
+                        <td>-Записи нет-</td>
+                    }
+                    else
+                    {
+                        <td><a class="text-info" onclick="UserModal('@activ.Id_User')">@activ.UserName</a></td>
+                    }
+                    <td>@activ.Visit_Start</td>
+                    <td>@activ.Visit_End</td>
+                    <td>@activ.Status.GetDisplayName()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <script>
+                function UserModal(Id) {
+            $('#myModal').modal();
+            $("#modalBody").load(`/account/UserInfoRecord?Id=${Id}`);
+        }
+    </script>
+    <div class="modal fade bd-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <input type="hidden" value='' id="HidenGuidtime" />
+                <div class="modal-header">
+                    <h1 class="text-center">Информация о пользователе</h1>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="modalBody" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary mr-auto" data-dismiss="modal">Назад</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

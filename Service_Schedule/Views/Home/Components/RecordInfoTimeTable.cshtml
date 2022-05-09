@@ -1,0 +1,40 @@
+﻿@model Service_Schedule.Models.TimeTableDate
+
+<input type="hidden" value="@ViewBag.GuidTimeTable" id="GuidTimeTable" />
+<input type="hidden" value="@Model.Date.ToString(@"dd.MM.yyyy")" id="Date" />
+@if (Model != null)
+{
+    var dateNow = DateTime.UtcNow.AddHours(+3);
+    <h1>Расписание:</h1>
+    <table id="Table" class="table">
+        <thead>
+            <tr class="border bg-dark text-white">
+                <th scope="col">#</th>
+                <th scope="col">Начало</th>
+                <th scope="col">Конец</th>
+                <th scope="col"> </th>
+            </tr>
+        </thead>
+        <tbody class="bg-light">
+            @{
+                int i = 1;
+            }
+            @foreach (var time in @Model.Times.OrderBy(x => x.Visit_Start))
+            {
+                <tr id="@time.Id" class="font-weight-bold">
+                    <th scope="row">@(i++)</th>
+                    <td id='Start' class="border">@time.Visit_Start.ToString(@"hh\:mm")</td>
+                    <td id='End' class="border">@time.Visit_End.ToString(@"hh\:mm")</td>
+                    @if (Model.Date == dateNow.Date && time.Visit_Start < dateNow.AddMinutes(30).TimeOfDay)
+                    {
+                         <td class="border text-center font-weight-light">Запись на прием закрыта</td> 
+                    }
+                    else
+                    {
+                          <td class="border text-center"><button class="btn btn-info" onclick="RecordModal('@time.Id')">Записаться</button></td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}

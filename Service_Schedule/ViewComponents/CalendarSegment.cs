@@ -17,24 +17,34 @@ namespace Service_Schedule.ViewComponents
             _db = context;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync(string Id, int Mounth)
+        public async Task<IViewComponentResult> InvokeAsync(string Id, int Mounth, bool? admin)
         {
             var date = DateTime.UtcNow.AddHours(3);
+            var filterDateStart = date.Date;
             if (string.IsNullOrEmpty(Id))
             {
                 Id = "";
             }
-            if (Mounth < date.Month - 1)
+            if (date.Month < Mounth)
             {
-                Mounth = date.Month;
+                date = date.AddMonths(-date.Month + Mounth);
+                filterDateStart = date.AddDays(-date.Day + 1);
             }
-            date = date.AddMonths(-date.Month + Mounth);
+            var countDay = DateTime.DaysInMonth(date.Year, date.Month);
+            var dateEndMounth = date.AddDays(-date.Day + countDay);
+            var freeDate = new List<TimeTableDate>();
+            if (admin.HasValue && admin.Value)
+            {
+                freeDate = await _db.TimeTableDates.Where(x => x.Spec_Id == Id && x.Date.Month== date.Month).ToListAsync();
+            }
+            else
+            {
+                freeDate = await _db.TimeTableDates.Where(x => x.Spec_Id == Id && x.Date.Date >= filterDateStart && x.Date.Date <= dateEndMounth.Date && x.Times.Any(y => y.User_Id == null) && x.Times.Any(y => y.Status == TimeTableTimeVisit.Visit_Status.Free)).ToListAsync();
+            }
 
-            var freeDate = await _db.TimeTableDates.Where(x => x.Spec_Id == Id && x.Times.Any(y => y.User_Id == null)).ToListAsync();
-     
             List<DayInfoForCalendar> dayInfos = new List<DayInfoForCalendar>();
 
-            var countDay = DateTime.DaysInMonth(date.Year, date.Month);
+
 
             date = date.AddDays(-date.Day + 1);
             var firstDayOfTheWeekInMonth = date.DayOfWeek;
@@ -53,7 +63,7 @@ namespace Service_Schedule.ViewComponents
             //Пустые Значения в начале
             for (int i = 1; i < DayOfWeeks.GetValueOrDefault(firstDayOfTheWeekInMonth); i++)
             {
-                dayInfos.Add(new DayInfoForCalendar { Day = 0, Type = 0});
+                dayInfos.Add(new DayInfoForCalendar { Day = 0, Type = 0 });
             }
 
             for (int i = 1; i <= countDay; i++)
@@ -62,7 +72,7 @@ namespace Service_Schedule.ViewComponents
 
                 if (freeday != null)
                 {
-                    dayInfos.Add(new DayInfoForCalendar { Day = i, Type = 1, Id =  freeday.Id.ToString()});
+                    dayInfos.Add(new DayInfoForCalendar { Day = i, Type = 1, Id = freeday.Id.ToString() });
                 }
                 else
                 {
@@ -77,12 +87,12 @@ namespace Service_Schedule.ViewComponents
             //Пустые Значения в конце
             for (int i = DayOfWeeks.GetValueOrDefault(endDayOfTheWeekInMonth); i < 7; i++)
             {
-                dayInfos.Add(new DayInfoForCalendar { Day = 0, Type = 0});
+                dayInfos.Add(new DayInfoForCalendar { Day = 0, Type = 0 });
             }
 
             var ss = dayInfos.Skip(0).Take(7).ToList();
 
-            return View("~/Views/Admin/Components/SegmentCalendar/CalendarSegment.cshtml", dayInfos);
+            return View("~/Views/OpenComponents/SegmentCalendar/CalendarSegment.cshtml", dayInfos);
         }
     }
 }

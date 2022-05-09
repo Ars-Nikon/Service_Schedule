@@ -20,13 +20,13 @@
                 <div class="collapse navbar-collapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Записаться</a>
+                            <a class="nav-link" href="/home/index/#SpecsList">Записаться</a>
                         </li>
                         @{
                             if (User.Identity.IsAuthenticated)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Мои записи</a>
+                                    <a class="nav-link"  asp-action="MyRecord" asp-controller="Home">Мои записи</a>
                                 </li>
                             }
                         }
@@ -43,6 +43,12 @@
                                         <a class="dropdown-item" asp-action="NewSpecialist" asp-controller="admin">Новый специалист</a>
                                         <a class="dropdown-item" asp-action="AdminTimeTable" asp-controller="admin">Редактор расписания</a>
                                     </div>
+                                </li>
+                            }
+                             if (User.IsInRole("spec"))
+                            {
+                                 <li class="nav-item">
+                                    <a class="nav-link"  asp-action="TimeTableRecord" asp-controller="home">Приемы на неделю</a>
                                 </li>
                             }
                         }

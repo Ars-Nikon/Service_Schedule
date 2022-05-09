@@ -12,14 +12,14 @@
         for (int i = 0; i < counrRows; i++)
         {
             <div class="row py-5">
-                @foreach (var spec in Model.Skip(i*3).Take(3))
+                @foreach (var spec in Model.Skip(i * 3).Take(3))
                 {
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 m-1 bg-white rounded box-shadow">
                         <img style='width:140px; height:140px;' class="rounded mx-auto d-block text-center" src="data:image/jpeg;base64,@(Convert.ToBase64String(spec.Avatar))" />
-                        <h2>@spec.User.Name</h2>
+                        <h2><a  asp-action="SpecInfo" asp-route-id="@spec?.Id">@spec?.User?.Name</a></h2>
                         <p>Специальность: @spec.TypeSpec</p>
-                        <p>@spec.Discription</p>
-                        <p><a class="btn btn-secondary" href="#" role="button">View details »</a></p>
+                        <p>Цена: @spec.Price</p>
+                        <p><a class="btn btn-secondary" asp-controller="Home" asp-action="Record" asp-route-Id="@spec.Id">Записаться</a></p>
                     </div>
                 }
             </div>

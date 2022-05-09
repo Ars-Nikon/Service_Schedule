@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "SpecInfo";
+    ViewData["container"] = "container";
+}
+@model Specialist
+@if (Model != null)
+{
+    <div class="mt-5 mb-5">
+        <h1 class="text-center">Специалист</h1>
+    </div>
+    <div class="container p-5 bg-white rounded box-shadow">
+        @if (Model?.Avatar != null)
+        {
+            <img style='width:140px; height:140px;' class="rounded mx-auto d-block" src="data:image/jpeg;base64,@(Convert.ToBase64String(Model.Avatar))" />
+        }
+        <div class="mt-5 mb-5">
+            <h3 class="text-center">@Model?.Surname @Model?.User?.Name @Model?.Patronymic</h3>
+        </div>
+        <h3 class="text-left">Тип специальности: @Model.TypeSpec</h3>
+        <h3 class="text-left">Описание:</h3>
+        <p class="text">@Model.Discription</p>
+        <h3 class="text-left">Цена: @Model.Price</h3>
+        @if(Model.Accepts)
+        {
+             <div class="modal-footer my-5">
+                <a asp-action="Record" asp-route-id="@Model.Id" class="btn btn-info ml-auto">Записаться</a>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <h1>Специалист временно недоступен</h1>
+}

@@ -20,23 +20,23 @@
                 @{
                     for (int i = 0; i < rows; i++)
                     {
-                        <tr>
+                        <tr class="font-weight-bold">
 
                             @foreach (var day in Model.Skip(i * 7).Take(7))
                             {
                                 if (day.Type == 1)
                                 {
-                                    <th class="border bg-success" id="@day.Id">@day.Day</th>
+                                    <td class="border bg-success calendar" id="@day.Id">@day.Day</td>
                                 }
                                 else
                                 {
                                     if (day.Day == 0)
                                     {
-                                        <th class="border"> </th>
+                                        <td class="border calendar"> </td>
                                     }
                                     else
                                     {
-                                        <th class="border">@day.Day</th>
+                                        <td class="border calendar">@day.Day</td>
                                     }
                                 }
                             }

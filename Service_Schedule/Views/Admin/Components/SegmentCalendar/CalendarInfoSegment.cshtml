@@ -1,0 +1,70 @@
+﻿@using Service_Schedule.Utilits
+@using static Service_Schedule.Models.TimeTableTimeVisit
+@model Service_Schedule.Models.TimeTableDate
+
+<input type="hidden" value="@ViewBag.Date" id="TimeTableDate" />
+<input type="hidden" value="@ViewBag.GuidTimeTable" id="GuidTimeTable" />
+@if (Model != null)
+{
+    <h1>Расписание:</h1>
+    <table id="Table" class="table">
+        <thead>
+            <tr class="border bg-dark text-white">
+                <th scope="col">#</th>
+                <th scope="col">Начало</th>
+                <th scope="col">Конец</th>
+                <th scope="col">Клиент</th>
+                <th scope="col">Статус</th>
+                <th scope="col">Описание</th>
+                <th scope="col"> </th>
+            </tr>
+        </thead>
+        <tbody class="bg-light">
+            @{
+                int i = 1;
+            }
+            @foreach (var time in @Model.Times.OrderBy(x => x.Visit_Start))
+            {
+                <tr id="@time.Id">
+                    <th scope="row">@(i++)</th>
+                    <td class="border">@time.Visit_Start.ToString(@"hh\:mm")</td>
+                    <td class="border">@time.Visit_End.ToString(@"hh\:mm")</td>
+                    @if (string.IsNullOrEmpty(time.User_Id))
+                    {
+                        <td class="border">-Записи нет-</td>
+                    }
+                    else
+                    {
+                        <td class="border"><a class="text-info" onclick="UserModal('@time.User_Id')">@time?.User?.Name</a></td>
+                    }
+
+                    <td id="Status" class="border">
+                        <select class="custom-select" asp-for="@time.Status">
+                            @foreach (Visit_Status status in (Visit_Status[])Enum.GetValues(typeof(Visit_Status)))
+                            {
+                                <option value ="@((int)status)">@status.GetDisplayName()</option>
+                            }
+                        </select>
+                    </td>
+                    <td id="Discription" class="border"><textarea asp-for="@time.Discription"></textarea></td>
+                    <td class="border"><button class="btn btn-info mr-5" onclick="UpdateTimeTableTime('@(time.Id)')">Сохранить</button><button class="btn btn-danger" onclick="DeleteTimeTableTime('@(time.Id)')">Удалить</button> </td>
+                </tr>
+
+            }
+            <tr>
+                <th scope="row"> </th>
+                <td class="border"><input type="time" name="AddNewStart" id="AddNewStart" /></td>
+                <td class="border"><input type="time" name="AddNewFinish" id="AddNewFinish" /></td>
+                <td class="border"></td>
+                <td class="border"><select class="custom-select" name="AddNewStatus" id="AddNewStatus" asp-items="@Html.GetEnumSelectList<TimeTableTimeVisit.Visit_Status>()"></select></td>
+                <td class="border"></td>
+                <td class="border"><button class="btn btn-info" onclick="AddNewTimeTableTime()">Добавить</button></td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <h1>Расписания отсутствует</h1>
+    <button class="btn btn-info" onclick="CreateTimeTableDate()">Создать расписание</button>
+}   

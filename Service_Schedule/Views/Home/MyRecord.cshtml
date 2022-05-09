@@ -1,0 +1,107 @@
+﻿@using Service_Schedule.Utilits
+@using System.ComponentModel.DataAnnotations
+@{
+    ViewData["Title"] = "MyRocord";
+    int indexActiv = 1;
+    int indexhistory = 1;
+}
+@model List<HistoryTimeTable>
+<div class="mt-5 mb-5">
+    <h1 class="text-center">Мои записи</h1>
+</div>
+@if (Model == null || Model.Count == 0)
+{
+    <h1>Записей нет</h1>
+}
+else
+{
+    <h2 class="text-left">Активные записи</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Дата</th>
+                <th scope="col">Специалист</th>
+                <th scope="col">Специальность</th>
+                <th scope="col">Начало</th>
+                <th scope="col">Конец</th>
+                <th scope="col">Стутус</th>
+                <th scope="col"> </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var activ in Model.Where(x => x.Status == TimeTableTimeVisit.Visit_Status.Taken))
+            {
+
+                <tr>
+                    <th scope="row">@(indexActiv++)</th>
+                    <td>@activ.Date.ToString(@"dd.MM.yyyy")</td>
+                    <td><a class="text-info" asp-action="SpecInfo" asp-route-id="@activ.Id_Spec">@activ.Spec_Name</a></td>
+                    <td>@activ.Spec_Type</td>
+                    <td>@activ.Visit_Start</td>
+                    <td>@activ.Visit_End</td>
+                    <td>@activ.Status.GetDisplayName()</td>
+                    <td><button class="btn btn-danger" onclick='CancelRecord("@activ.Id_TimeTableTime")'>Отменить запись</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h2 class="text-left py-5">История</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Дата</th>
+                <th scope="col">Специалист</th>
+                <th scope="col">Специальность</th>
+                <th scope="col">Начало</th>
+                <th scope="col">Конец</th>
+                <th scope="col">Стутус</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var activ in Model.Where(x => x.Status != TimeTableTimeVisit.Visit_Status.Taken).OrderBy(x => x.Date))
+            {
+                <tr id="@activ.Id_TimeTableTime">
+                    <th scope="row">@(indexhistory++)</th>
+                    <td>@activ.Date.ToString(@"dd.MM.yyyy")</td>
+                    <td><a class="text-info" asp-action="SpecInfo" asp-route-id="@activ.Id_Spec">@activ.Spec_Name</a></td>
+                    <td>@activ.Spec_Type</td>
+                    <td>@activ.Visit_Start</td>
+                    <td>@activ.Visit_End</td>
+                    <td>@activ.Status.GetDisplayName()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <script>
+            function CancelRecord(Id)
+            {
+                let msg = {
+            Id: Id,
+        }
+        let shure = confirm("Точно ОТМЕНИТЬ запись?");
+        if (shure) {
+            $.ajax({
+                type: 'POST',
+                url: '../home/CancelRecord',
+                data: msg,
+                success: function (data) {
+                    {
+                        if (data.status != "Ok") {
+                            alert(data.message);
+                        }
+                        else {
+                             window.location.replace("../home/MyRecord");
+                        }
+                    }
+                },
+                error: function () {
+                    alert('Ошибка!');
+                }
+            });
+        }
+            }
+    </script>
+}

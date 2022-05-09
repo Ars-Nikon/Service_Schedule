@@ -25,6 +25,8 @@ namespace Service_Schedule.Models
         [Required]
         public string TypeSpec { get; set; }
 
+        public float? Price { get; set; }
+
         [Required]
         public byte[] Avatar { get; set; }
 
@@ -34,6 +36,7 @@ namespace Service_Schedule.Models
         {
             return new SpecialistView()
             {
+                Price = Price,
                 Surname = Surname,
                 Avatar_byte = Avatar,
                 Patronymic = Patronymic,

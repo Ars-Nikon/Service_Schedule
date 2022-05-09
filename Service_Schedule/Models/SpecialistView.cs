@@ -18,6 +18,8 @@ namespace Service_Schedule.Models
 
         public IFormFile Avatar { get; set; }
 
+        [Required(ErrorMessage = "*Цена Отсутствует")]
+        public float? Price { get; set; }
         public byte[] Avatar_byte { get; set; }
 
         [Required(ErrorMessage = "*Тип специальности Отсутствует")]
@@ -31,7 +33,8 @@ namespace Service_Schedule.Models
                     spec.Patronymic.Equals(Patronymic?.Trim()) &&
                     spec.Accepts.Equals(Accepts) &&
                     spec.Discription.Equals(Discription?.Trim()) &&
-                    spec.TypeSpec.Equals(TypeSpec));
+                    spec.TypeSpec.Equals(TypeSpec) &&
+                    spec.Price.Equals(Price));
         }
     }
 }

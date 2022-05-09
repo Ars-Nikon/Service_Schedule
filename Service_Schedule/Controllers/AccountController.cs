@@ -188,6 +188,20 @@ namespace Service_Schedule.Controllers
             }
             return View(model);
         }
-
+        [HttpGet]
+        [Authorize(Roles = "admin,spec")]
+        public async Task<IActionResult> UserInfoRecord(string Id)
+        {
+            if (string.IsNullOrEmpty(Id))
+            {
+                return NotFound();
+            }
+            var user = await _userManager.FindByIdAsync(Id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return ViewComponent("UserInfoRecord", user);
+        }
     }
 }
