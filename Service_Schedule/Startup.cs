@@ -11,6 +11,7 @@ using Service_Schedule.Models;
 using Service_Schedule.Utilits;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,6 +48,9 @@ namespace Service_Schedule
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var cultureInfo = new CultureInfo("ru-RU");
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
